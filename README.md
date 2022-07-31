@@ -9,8 +9,9 @@
  - Sqlite
  - Sequelize
  - Socket
- - Svelte
- - Sveltestrap
+ - Sveltekit
+ - Tailwind
+ - Flowbite
 
 ##### Nodejs Elective : KEA
  - Exam Project
