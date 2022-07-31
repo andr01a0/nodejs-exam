@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+
+node_modules
+.snyk
+*.sqlite
+.vscode
+id_rsa_priv.pem
