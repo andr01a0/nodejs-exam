@@ -33,6 +33,6 @@ export default (passport) => {
         }
         return done(null, false)
       })
-      .catch(err => console.log(err))
+      .catch(err => done(err, false))
   }))
 }

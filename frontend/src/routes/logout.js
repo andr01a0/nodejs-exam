@@ -2,8 +2,10 @@
 
 export async function GET() {
 
+
+
   return {
-    headers: { Location: '/feed' },
+    headers: { Location: '/login' },
     status: 302
   }
 }
