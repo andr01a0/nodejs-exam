@@ -25,9 +25,7 @@
 			class="mr-3 h-6 sm:h-9"
 			alt="Friendster Logo"
 		/>
-		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-			Friendster
-		</span>
+		<span class="text-xl">Friendster</span>
 	</NavBrand>
 	{#if $user.email}
 	<div class="flex md:order-2">
