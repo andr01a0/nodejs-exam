@@ -2,6 +2,7 @@ import express from 'express'
 const router = express.Router()
 import User from '../models/user.model.js'
 import issueJWT from '../utils/jwt.utils.js'
+import { userDTO } from '../dto/user.js'
 
 router
 .post('/login', (req, res, next) => {
@@ -36,8 +37,7 @@ router
 	User.create(req.body)
 	.then(user => {
 		// remove password from user object
-		delete user.dataValues.password
-		res.json({ success: true, user: user })
+		res.json({ success: true, user: userDTO(user) })
 	})
 	.catch(err => {
 		return next(err)

@@ -37,10 +37,8 @@ app.use(cors({
 
 // backend routes
 app.use('/api', passport.authenticate('jwt', { session: false }), apiRoute)
-app.get('/validateToken', passport.authenticate('jwt', { session: false }), (req, res) => {
-	res.status(200).json({
-		message: 'Success'
-	})
+app.get('/api/getCurrentUser', passport.authenticate('jwt', { session: false }), (req, res) => {
+	res.send(req.user)
 })
 app.use('/', rootRoute)
 

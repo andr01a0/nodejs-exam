@@ -18,7 +18,8 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   }
-})
+}, 
+{})
 
 User.addHook("beforeCreate", newUser => {
   newUser.password = bcrypt.hashSync(newUser.password, bcrypt.genSaltSync(10), null)

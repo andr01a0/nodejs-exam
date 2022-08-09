@@ -1,11 +1,10 @@
-/** @type {import('@sveltejs/kit').RequestHandler} */
-
 import backendServer from "$lib/data/backendServer.json"
+import publicRoutes from "$lib/data/publicRoutes.json"
 
-export async function GET() {
-
-  try {
-		const response = await fetch(`${backendServer}/logout`, {
+// Check if token is valid
+export const validateToken = async() => {
+	try {
+		const response = await fetch(`${backendServer}/api/getCurrentUser`, {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
@@ -19,9 +18,4 @@ export async function GET() {
 	} catch (error) {
 		return false
 	}
-
-  return {
-    headers: { Location: '/login' },
-    status: 302
-  }
 }

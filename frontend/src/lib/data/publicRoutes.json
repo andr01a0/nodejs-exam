@@ -1,4 +1,6 @@
 [
 	"/login",
-	"/register"
+	"/register",
+	"/about",
+	"/license"
 ]

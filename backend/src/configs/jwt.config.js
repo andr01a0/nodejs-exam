@@ -4,6 +4,7 @@ import path from "path"
 import User from "../models/user.model.js"
 import {fileURLToPath} from 'url'
 import { parse } from "cookie"
+import { userDTO } from "../dto/user.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -29,7 +30,7 @@ export default (passport) => {
     User.findOne(jwt_payload.sub)
       .then(user => {
         if (user) {
-          return done(null, user)
+          return done(null, userDTO(user))
         }
         return done(null, false)
       })
