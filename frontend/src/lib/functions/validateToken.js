@@ -8,8 +8,8 @@ export const validateToken = async() => {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
-				"credentials": "include"
-			}
+			},
+			credentials: "include"
 		})
 		
 		if (response.status === 200) {

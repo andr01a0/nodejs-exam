@@ -9,7 +9,7 @@
 
 	$: activeNavLink = null
 	afterNavigate(async ({ from, to }) => {
-		const possiblePaths = ["/feed","/timeline","/friends"]
+		const possiblePaths = ["/feed","/timeline","/friends", "/login", "/register"]
 		if(possiblePaths.includes(to.pathname.toString()))
 			activeNavLink = to.pathname
 		else
@@ -46,6 +46,12 @@
 		<NavLi href="/feed" active={activeNavLink === "/feed"}>Feed</NavLi>
 		<NavLi href="/timeline" active={activeNavLink === "/timeline"}>Timeline</NavLi>
 		<NavLi href="/friends" active={activeNavLink === "/friends"}>Friends</NavLi>
+	</NavUl>
+	{:else}
+	<NavHamburger on:click={toggle} />
+	<NavUl {hidden}>
+		<NavLi href="/login" active={activeNavLink === "/login"}>Login</NavLi>
+		<NavLi href="/register" active={activeNavLink === "/register"}>Register</NavLi>
 	</NavUl>
 	{/if}
 </Navbar>

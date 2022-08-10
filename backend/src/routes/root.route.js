@@ -6,16 +6,16 @@ import { userDTO } from '../dto/user.js'
 
 router
 .post('/login', (req, res, next) => {
-	User.findOne({where: { username: req.body.username }})
+	User.findOne({where: { email: req.body.email }})
 	.then(user => {
 		if (!user) {
-			return res.status(401).json({ message: 'Wrong username or password' })
+			return res.status(401).json({ message: 'Wrong email or password' })
 		}
 		
 		const validPassword = user.validatePassword(req.body.password, user.password)
 
 		if (!validPassword) {
-			return res.status(401).json({ message: 'Wrong username or password' })
+			return res.status(401).json({ message: 'Wrong email or password' })
 		}
 
 		const tokenObject = issueJWT(user)
