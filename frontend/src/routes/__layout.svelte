@@ -1,27 +1,27 @@
 <script>
   import "../app.css"
 	import { onMount } from 'svelte'
-	import { auth } from "$lib/functions/auth";
+	import { login } from "$lib/functions/auth";
 	import Header from "$lib/components/Header.svelte"
 	import Footer from "$lib/components/Footer.svelte"
 	import { fade } from 'svelte/transition'
-	import { afterNavigate } from '$app/navigation'
 	import { classList } from 'svelte-body'
+	import { userStore } from "$lib/store"
+	import publicRoutes from "$lib/data/publicRoutes.json"
+	import { goto } from "$app/navigation"
 
 	let isSiteReadyToLoad = false
 	onMount(async() => {
-		await auth()
+		if($userStore === null && !publicRoutes.includes(window.location.pathname)) {
+			await login()
+			if($userStore !== null) {
+				goto("/feed")
+			} else {
+				goto("/login")
+			}
+		}
 		isSiteReadyToLoad = true
 	})
-
-	/* afterNavigate(async ({ from, to }) => {
-		const possiblePaths = ["/feed","/timeline","/friends"]
-		if(possiblePaths.includes(to.pathname.toString()))
-			activeNavLink = to.pathname
-		else
-			activeNavLink = null
-		return true;
-	}) */
 
 </script>
 

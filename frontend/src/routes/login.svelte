@@ -1,15 +1,18 @@
 <script>
   import {
-    Card, Label, Input, Checkbox, Button
+    Card, Label, Input, Button
   } from "flowbite-svelte"
   import backendServer from "$lib/data/backendServer.json"
+  import { login } from "$lib/functions/auth"
+  import { goto } from "$app/navigation"
+  import { userStore } from "$lib/store"
 
   const handleOnSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
     const email = formData.get("email")
     const password = formData.get("password")
-    const loginResponse = await fetch(`${backendServer}/login`, {
+    await fetch(`${backendServer}/login`, {
       method: "POST",
       headers:{
         'Content-Type': 'application/json'
@@ -20,7 +23,12 @@
       }),
       credentials: 'include'
     })
-    console.log(await loginResponse.json())
+    await login()
+    if($userStore !== null) {
+				goto("/feed")
+			} else {
+				goto("/login")
+			}
   }
 </script>
 
@@ -35,10 +43,6 @@
 			<span>Your password</span>
 			<Input type="password" name="password" placeholder="•••••" required />
 		</Label>
-		<!-- <div class="flex items-start">
-			<Checkbox>Remember me</Checkbox>&nbsp;
-			<a href="/" class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500">Forgot password?</a>
-		</div> -->
 		<Button type="submit" class="w-full1">Login to your account</Button>
 			<div class="text-sm font-medium text-gray-500 dark:text-gray-300">
 				Not registered? <a href="/register" class="text-blue-700 hover:underline dark:text-blue-500">Create account</a>

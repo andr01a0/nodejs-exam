@@ -1,21 +1,42 @@
-import {user} from "$lib/store"
-import publicRoutes from "$lib/data/publicRoutes.json"
-import {goto} from "$app/navigation"
-import {validateToken} from "$lib/functions/validateToken"
+import backendServer from "$lib/data/backendServer.json"
+import { userStore } from "$lib/store"
 
-export const auth = async() => {
-
-	// validate token and set user if valid
-	const validToken = await validateToken()
-	/* if (validToken) {
-		user.set(await getUser())
-	} */
-
-	// redirect to feed if user is logged in
-	if (validToken) {
-		goto("/feed")
+const validateToken = async() => {
+	try {
+		const response = await fetch(`${backendServer}/api/getCurrentUser`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include"
+		})
+		
+		if (response.status === 200) {
+			return await response.json()
+		}
+		return false
+	} catch (error) {
+		return false
 	}
+}
+
+export const login = async () => {
 	
-	user.set({})
-	goto("/login")
+	const userFromValidToken = await validateToken()
+	if (userFromValidToken !== false) {
+		userStore.set(userFromValidToken)
+	} else
+		userStore.set(null)
+		
+}
+
+export const logout = async () => {
+	const response = await fetch(`${backendServer}/logout`, {
+		method: "GET",
+		credentials: "include"
+	})
+
+	if(response.status === 200) {
+		userStore.set(null)
+	}
 }

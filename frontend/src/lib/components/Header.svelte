@@ -5,12 +5,13 @@
     Dropdown, DropdownHeader, DropdownItem, DropdownDivider,
     Avatar,
   } from "flowbite-svelte"
-	import { user } from "$lib/store"
+	import { userStore } from "$lib/store"
+	import headerPaths from "$lib/data/headerPaths.json"
+	import { logout } from "$lib/functions/auth"
 
 	$: activeNavLink = null
 	afterNavigate(async ({ from, to }) => {
-		const possiblePaths = ["/feed","/timeline","/friends", "/login", "/register"]
-		if(possiblePaths.includes(to.pathname.toString()))
+		if(headerPaths.includes(to.pathname.toString()))
 			activeNavLink = to.pathname
 		else
 			activeNavLink = null
@@ -27,18 +28,21 @@
 		/>
 		<span class="text-xl">Friendster</span>
 	</NavBrand>
-	{#if $user.email}
+	{#if $userStore !== null}
 	<div class="flex md:order-2">
 		<Dropdown arrowIcon={false} inline={true}>
 			<Avatar {avatar} slot="label" />
 			<DropdownHeader>
-				<span class="block text-sm">{$user.username}</span>
-				<span class="block truncate text-sm font-medium">{$user.email}</span>
+				<span class="block text-sm">{$userStore.email}</span>
+				<span class="block truncate text-sm font-medium">{$userStore.email}</span>
 			</DropdownHeader>
 			<DropdownItem on:click={() => goto("/profile")}>Profile</DropdownItem>
 			<DropdownItem on:click={() => goto("/settings")}>Settings</DropdownItem>
 			<DropdownDivider />
-			<DropdownItem on:click={() => goto("/logout")}>Sign out</DropdownItem>
+			<DropdownItem on:click={() => {
+				logout()
+				goto("/login")
+			}}>Logout</DropdownItem>
 		</Dropdown>
 		<NavHamburger on:click={toggle} />
 	</div>

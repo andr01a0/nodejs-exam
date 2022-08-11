@@ -44,6 +44,7 @@ router
 	})
 })
 .get('/logout', (req, res) => {
+	console.log(req.cookies)
 	if (req.cookies['jwt']) {
 			res
 			.clearCookie('jwt')
