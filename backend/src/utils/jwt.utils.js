@@ -10,7 +10,7 @@ const pathToKey = path.join(__dirname, '../../..', 'id_rsa_priv.pem')
 const PRIV_KEY = fs.readFileSync(pathToKey, 'utf8')
 
 export default (user) => {
-  const _id = user._id
+  const _id = user.dataValues.userId
 
   const expiresIn = '86400000'
 

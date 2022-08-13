@@ -14,7 +14,7 @@ const PUB_KEY = fs.readFileSync(pathToKey, 'utf8')
 
 const cookieJWTExtractor = function(req) {
   let token = null
-  if (req && req.cookies) token = req.cookies['jwt']
+  if (req.cookies.jwt !== undefined) token = req.cookies.jwt
   else if(req.headers.cookie) token = parse(req.headers.cookie)['jwt']
   return token
 }
@@ -27,7 +27,7 @@ const options = {
 
 export default (passport) => {
   passport.use(new JwtStrategy(options, (jwt_payload, done) => {
-    User.findOne(jwt_payload.sub)
+    User.findOne({where: { userId: jwt_payload.sub }})
       .then(user => {
         if (user) {
           return done(null, userDTO(user))
