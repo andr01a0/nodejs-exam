@@ -10,13 +10,17 @@
   const handleOnSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
-    const email = formData.get("email")
-    const password = formData.get("password")
-    const rpassword = formData.get("rpassword")
-    if(rpassword === password) {
-      const signupResponse = await signup(email, password)
+    const rPassword = formData.get("rpassword")
+    const data = {
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      email: formData.get("email"),
+      password: formData.get("password")
+    }
+    if(rPassword === data.password) {
+      const signupResponse = await signup(data)
       if(signupResponse.ok) {
-        const loginResponse = await login(email, password)
+        const loginResponse = await login(data)
         if(loginResponse.ok) {
           await getCurrentUser()
           if($userStore !== null)
@@ -31,7 +35,15 @@
 <Card class="w-2/4">
 	<form class="flex flex-col space-y-6" on:submit={handleOnSubmit}>
 		<h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Sign up to our platform</h3>
-		<Label class="space-y-2">
+    <Label class="space-y-2">
+			<span>First Name</span>
+			<Input type="text" name="firstName" placeholder="Jhon" required />
+		</Label>
+    <Label class="space-y-2">
+			<span>Last Name</span>
+			<Input type="text" name="lastName" placeholder="Doe" required />
+		</Label>
+    <Label class="space-y-2">
 			<span>Email</span>
 			<Input type="email" name="email" placeholder="name@email.com" required />
 		</Label>

@@ -42,7 +42,7 @@
 		<Dropdown arrowIcon={false} inline={true}>
 			<Avatar {avatar} slot="label" />
 			<DropdownHeader>
-				<span class="block text-sm">{$userStore.email}</span>
+				<span class="block text-sm">{`${$userStore.firstName} ${$userStore.lastName}`}</span>
 				<span class="block truncate text-sm font-medium">{$userStore.email}</span>
 			</DropdownHeader>
 			<DropdownItem on:click={() => goto("/profile")}>Profile</DropdownItem>

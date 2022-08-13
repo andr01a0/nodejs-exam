@@ -22,15 +22,15 @@ export const getCurrentUser = async () => {
 		
 }
 
-export const login = async (email, password) => {
+export const login = async (data) => {
 	const response = await fetch(`${backendServer}/login`, {
 		method: "POST",
 		headers:{
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			email,
-			password
+			email: data.email,
+			password: data.password
 		}),
 		credentials: 'include'
 	})
@@ -42,15 +42,17 @@ export const login = async (email, password) => {
 	}
 }
 
-export const signup = async (email, password) => {
+export const signup = async (data) => {
 	const response = await fetch(`${backendServer}/signup`, {
 		method: "POST",
 		headers:{
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify({
-			email,
-			password
+			firstName: data.firstName,
+			lastName: data.lastName,
+			email: data.email,
+			password: data.password
 		}),
 		credentials: 'include'
 	})

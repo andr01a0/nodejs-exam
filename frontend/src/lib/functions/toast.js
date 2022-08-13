@@ -1,16 +1,8 @@
 import {
 	toastVisible,
 	toastMessage,
-	toastColor,
+	toastType,
 } from "$lib/store"
-
-// type of toast defines the color of the toast
-const ToastType = {
-	Success: "green",
-	Error: "red",
-	Warning: "yellow",
-	Info: "blue"
-}
 
 // show toast for 3 seconds by default
 let toastDuration = 3000
@@ -20,7 +12,7 @@ let activeTimeout = null
 
 function setToast(message, type, duration) {
 	toastMessage.set(message ?? "Hello I am a toast")
-	toastColor.set(ToastType[type] ?? ToastType.Info)
+	toastType.set(type ?? "Info")
 	toastDuration = duration ?? toastDuration
 }
 

@@ -10,9 +10,11 @@
   const handleOnSubmit = async (e) => {
     e.preventDefault()
     const formData = new FormData(e.target)
-    const email = formData.get("email")
-    const password = formData.get("password")
-    const loginResponse = await login(email, password)
+    const data = {
+      email: formData.get("email"),
+      password: formData.get("password")
+    }
+    const loginResponse = await login(data)
     if(loginResponse.ok) {
       await getCurrentUser()
       if($userStore !== null)
