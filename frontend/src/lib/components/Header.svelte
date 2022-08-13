@@ -1,5 +1,6 @@
 <script>
-	  import { goto, afterNavigate } from '$app/navigation'
+	import { goto, afterNavigate } from '$app/navigation'
+	import { onMount } from 'svelte'
   import { 
     Navbar, NavBrand, NavHamburger, NavUl, NavLi,
     Dropdown, DropdownHeader, DropdownItem, DropdownDivider,
@@ -8,14 +9,22 @@
 	import { userStore } from "$lib/store"
 	import headerPaths from "$lib/data/headerPaths.json"
 	import { logout } from "$lib/functions/auth"
+	import { showToastAndHideAfter } from "$lib/functions/toast"
 
 	$: activeNavLink = null
-	afterNavigate(async ({ from, to }) => {
-		if(headerPaths.includes(to.pathname.toString()))
-			activeNavLink = to.pathname
+
+	const changeActiveNavLink = async (path) => {
+		if(headerPaths.includes(path))
+			activeNavLink = path
 		else
 			activeNavLink = null
-		return true;
+	}
+
+	onMount(async() => {
+		changeActiveNavLink(window.location.pathname)
+	})
+	afterNavigate(async ({ from, to }) => {
+		changeActiveNavLink(to.pathname)
 	})
 </script>
 
@@ -39,9 +48,10 @@
 			<DropdownItem on:click={() => goto("/profile")}>Profile</DropdownItem>
 			<DropdownItem on:click={() => goto("/settings")}>Settings</DropdownItem>
 			<DropdownDivider />
-			<DropdownItem on:click={() => {
-				logout()
-				goto("/login")
+			<DropdownItem on:click={async () => {
+				const logoutResponse = await logout()
+				if(logoutResponse.ok) goto("/login")
+				else showToastAndHideAfter("Error", logoutResponse.message ?? logoutResponse.statusText)
 			}}>Logout</DropdownItem>
 		</Dropdown>
 		<NavHamburger on:click={toggle} />

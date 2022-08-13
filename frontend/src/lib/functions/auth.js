@@ -2,32 +2,64 @@ import backendServer from "$lib/data/backendServer.json"
 import { userStore } from "$lib/store"
 
 const validateToken = async() => {
+	const response = await fetch(`${backendServer}/api/getCurrentUser`, {
+		method: "GET",
+		credentials: "include"
+	})
+	
 	try {
-		const response = await fetch(`${backendServer}/api/getCurrentUser`, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			credentials: "include"
-		})
-		
-		if (response.status === 200) {
-			return await response.json()
-		}
-		return false
-	} catch (error) {
-		return false
+		return await response.json()
+	}	catch (err) {
+		return response
 	}
 }
 
-export const login = async () => {
+export const getCurrentUser = async () => {
 	
-	const userFromValidToken = await validateToken()
-	if (userFromValidToken !== false) {
-		userStore.set(userFromValidToken)
-	} else
-		userStore.set(null)
+	const validateTokenResponse = await validateToken()
+	if (validateTokenResponse.ok)
+		userStore.set(validateTokenResponse.user)
 		
+}
+
+export const login = async (email, password) => {
+	const response = await fetch(`${backendServer}/login`, {
+		method: "POST",
+		headers:{
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			email,
+			password
+		}),
+		credentials: 'include'
+	})
+	
+	try {
+		return await response.json()
+	}	catch (err) {
+		return response
+	}
+}
+
+export const signup = async (email, password) => {
+	const response = await fetch(`${backendServer}/signup`, {
+		method: "POST",
+		headers:{
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({
+			email,
+			password
+		}),
+		credentials: 'include'
+	})
+
+	try {
+		return await response.json()
+	}	catch (err) {
+		return response
+	}
 }
 
 export const logout = async () => {
@@ -36,7 +68,12 @@ export const logout = async () => {
 		credentials: "include"
 	})
 
-	if(response.status === 200) {
+	if(response.ok)
 		userStore.set(null)
+
+	try {
+		return await response.json()
+	}	catch (err) {
+		return response
 	}
 }

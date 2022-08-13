@@ -9,13 +9,13 @@ router
 	User.findOne({where: { email: req.body.email }})
 	.then(user => {
 		if (!user) {
-			return res.status(401).json({ message: 'Wrong email or password' })
+			return res.status(401).json({ ok: false, message: 'Wrong email or password' })
 		}
 		
 		const validPassword = user.validatePassword(req.body.password, user.password)
 
 		if (!validPassword) {
-			return res.status(401).json({ message: 'Wrong email or password' })
+			return res.status(401).json({ ok: false, message: 'Wrong email or password' })
 		}
 
 		const tokenObject = issueJWT(user)
@@ -23,7 +23,7 @@ router
 		res.cookie('jwt', tokenObject.token.replace('Bearer ', ''), { httpOnly: true, maxAge: tokenObject.expires })
 
 		return res.status(200).json({
-			success: true,
+			ok: true,
 			token: tokenObject.token,
 			expiresIn: tokenObject.expires
 		})
@@ -37,25 +37,17 @@ router
 	User.create(req.body)
 	.then(user => {
 		// remove password from user object
-		res.json({ success: true, user: userDTO(user) })
+		res.json({ ok: true, user: userDTO(user) })
 	})
 	.catch(err => {
 		return next(err)
 	})
 })
 .get('/logout', (req, res) => {
-	console.log(req.cookies)
 	if (req.cookies['jwt']) {
-			res
-			.clearCookie('jwt')
-			.status(200)
-			.json({
-					message: 'You have logged out'
-			})
+		res.clearCookie('jwt').status(200).json({ ok: true, message: 'You have logged out' })
 	} else {
-			res.status(401).json({
-					error: 'Invalid jwt'
-			})
+		res.status(401).json({ ok: false, message: 'Invalid jwt' })
 	}
 })
 

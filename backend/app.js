@@ -38,7 +38,7 @@ app.use(cors({
 // backend routes
 app.use('/api', passport.authenticate('jwt', { session: false }), apiRoute)
 app.get('/api/getCurrentUser', passport.authenticate('jwt', { session: false }), (req, res) => {
-	res.send(req.user)
+	res.status(200).json({ ok: true, user: req.user })
 })
 app.use('/', rootRoute)
 

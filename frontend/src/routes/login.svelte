@@ -2,9 +2,9 @@
   import {
     Card, Label, Input, Button
   } from "flowbite-svelte"
-  import backendServer from "$lib/data/backendServer.json"
-  import { login } from "$lib/functions/auth"
+  import { login, getCurrentUser } from "$lib/functions/auth"
   import { goto } from "$app/navigation"
+  import { showToastAndHideAfter } from "$lib/functions/toast"
   import { userStore } from "$lib/store"
 
   const handleOnSubmit = async (e) => {
@@ -12,23 +12,13 @@
     const formData = new FormData(e.target)
     const email = formData.get("email")
     const password = formData.get("password")
-    await fetch(`${backendServer}/login`, {
-      method: "POST",
-      headers:{
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email,
-        password
-      }),
-      credentials: 'include'
-    })
-    await login()
-    if($userStore !== null) {
-				goto("/feed")
-			} else {
-				goto("/login")
-			}
+    const loginResponse = await login(email, password)
+    if(loginResponse.ok) {
+      await getCurrentUser()
+      if($userStore !== null)
+				goto("/")
+      else showToastAndHideAfter("Error", "Error logging in")
+    } else showToastAndHideAfter("Error", loginResponse.message ?? loginResponse.statusText)
   }
 </script>
 

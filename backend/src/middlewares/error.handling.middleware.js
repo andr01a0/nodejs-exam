@@ -6,9 +6,9 @@ export const error = (req, res, next) => {
 
 export const errorHandler = (err, req, res, next) => {
   // set locals, only providing error in development
-  const error = process.env.NODE_ENV === 'development' ? {message: err.message} : {}
+  const error = process.env.NODE_ENV === 'development' ? { ok: false, message: err.message} : {}
 
   // render the error page
   res.status(err.status || 500)
-  res.send(error)
+  res.json(error)
 }
