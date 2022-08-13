@@ -26,6 +26,8 @@
 	];
 </script>
 
-<Activity>
-  <ActivityItem {activities} />
-</Activity>
+<div class="whitespace-normal">
+	<Activity>
+		<ActivityItem {activities} />
+	</Activity>
+</div>

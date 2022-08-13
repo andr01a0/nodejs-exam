@@ -30,15 +30,13 @@
   <title>Friendster</title>
 </svelte:head>
 
-<svelte:body use:classList={'self-center whitespace-nowrap font-semibold dark:text-white'}/>
-
 {#if isSiteReadyToLoad}
 <div transition:fade>
 	<Header />
 
 	<Toast />
 
-	<main class="bg-white dark:bg-gray-800 mt-20 mb-10 dark:text-white flex justify-center">
+	<main class="bg-gray-50 dark:bg-gray-800 pt-24 pb-10 pl-5 pr-5 lg:pl-0 lg:pr-0 dark:text-white flex justify-center">
 		<slot />
 	</main>
 	 

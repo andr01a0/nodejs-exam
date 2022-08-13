@@ -1,11 +1,12 @@
 <script>
   import {
-    Card, Label, Input, Button
+    Card, Label, Button, Iconinput
   } from "flowbite-svelte"
   import { login, getCurrentUser } from "$lib/functions/auth"
   import { goto } from "$app/navigation"
   import { showToastAndHideAfter } from "$lib/functions/toast"
   import { userStore } from "$lib/store"
+  import { Mail, Key } from "svelte-heros"
 
   const handleOnSubmit = async (e) => {
     e.preventDefault()
@@ -29,11 +30,11 @@
 		<h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Sign in to our platform</h3>
 		<Label class="space-y-2">
 			<span>Email</span>
-			<Input type="email" name="email" placeholder="name@email.com" required />
+      <Iconinput noBorder name="email" type="email" icon={Mail} iconClass="h-4 w-4 mr-2 dark:text-green-500" placeholder="name@email.com" required/>
 		</Label>
 		<Label class="space-y-2">
 			<span>Your password</span>
-			<Input type="password" name="password" placeholder="•••••" required />
+      <Iconinput noBorder name="password" type="password" icon={Key} iconClass="h-4 w-4 mr-2 dark:text-green-500" placeholder="•••••" required/>
 		</Label>
 		<Button type="submit" class="w-full1">Login to your account</Button>
 			<div class="text-sm font-medium text-gray-500 dark:text-gray-300">

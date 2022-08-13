@@ -1,11 +1,12 @@
 <script>
   import {
-    Card, Label, Input, Button
+    Card, Label, Input, Button, Iconinput
   } from "flowbite-svelte"
   import { signup, login, getCurrentUser } from "$lib/functions/auth"
   import { showToastAndHideAfter } from "$lib/functions/toast"
   import { goto } from "$app/navigation"
   import { userStore } from "$lib/store"
+  import { Mail, Key, User } from "svelte-heros"
 
   const handleOnSubmit = async (e) => {
     e.preventDefault()
@@ -37,23 +38,23 @@
 		<h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Sign up to our platform</h3>
     <Label class="space-y-2">
 			<span>First Name</span>
-			<Input type="text" name="firstName" placeholder="Jhon" required />
+      <Iconinput noBorder name="firstName" type="text" icon={User} iconClass="h-4 w-4 mr-2 dark:text-green-500" placeholder="Jhon" required/>
 		</Label>
     <Label class="space-y-2">
 			<span>Last Name</span>
-			<Input type="text" name="lastName" placeholder="Doe" required />
+      <Iconinput noBorder name="lastName" type="text" icon={User} iconClass="h-4 w-4 mr-2 dark:text-green-500" placeholder="Doe" required/>
 		</Label>
     <Label class="space-y-2">
 			<span>Email</span>
-			<Input type="email" name="email" placeholder="name@email.com" required />
+      <Iconinput noBorder name="email" type="email" icon={Mail} iconClass="h-4 w-4 mr-2 dark:text-green-500" placeholder="name@email.com" required/>
 		</Label>
 		<Label class="space-y-2">
 			<span>Your password</span>
-			<Input type="password" name="password" placeholder="•••••" required />
+			<Iconinput noBorder name="password" type="password" icon={Key} iconClass="h-4 w-4 mr-2 dark:text-green-500" placeholder="•••••" required/>
 		</Label>
     <Label class="space-y-2">
 			<span>Repeat your password</span>
-			<Input type="password" name="rpassword" placeholder="•••••" required />
+      <Iconinput noBorder name="rpassword" type="password" icon={Key} iconClass="h-4 w-4 mr-2 dark:text-green-500" placeholder="•••••" required/>
 		</Label>
 		<Button type="submit" class="w-full1">Create your account</Button>
 	</form>

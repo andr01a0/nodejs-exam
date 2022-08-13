@@ -10,6 +10,8 @@
 	import headerPaths from "$lib/data/headerPaths.json"
 	import { logout } from "$lib/functions/auth"
 	import { showToastAndHideAfter } from "$lib/functions/toast"
+	import NotificationBell from "$lib/components/NotificationBell.svelte"
+	import { UserCircle, Adjustments, Logout } from "svelte-heros"
 
 	$: activeNavLink = null
 
@@ -28,31 +30,32 @@
 	})
 </script>
 
-<Navbar let:avatar let:hidden let:toggle rounded={false} class="fixed top-0 left-0 right-0">
+<Navbar let:avatar let:hidden let:toggle rounded={false} class="fixed top-0 left-0 right-0 z-10">
 	<NavBrand href="/">
 		<img
 			src="/images/friendster.png"
 			class="mr-3 h-6 sm:h-9"
 			alt="Friendster Logo"
 		/>
-		<span class="text-xl">Friendster</span>
+		<span class="text-xl self-center whitespace-nowrap font-semibold dark:text-white">Friendster</span>
 	</NavBrand>
 	{#if $userStore !== null}
 	<div class="flex md:order-2">
+		<NotificationBell />
 		<Dropdown arrowIcon={false} inline={true}>
 			<Avatar {avatar} slot="label" />
 			<DropdownHeader>
 				<span class="block text-sm">{`${$userStore.firstName} ${$userStore.lastName}`}</span>
 				<span class="block truncate text-sm font-medium">{$userStore.email}</span>
 			</DropdownHeader>
-			<DropdownItem on:click={() => goto("/profile")}>Profile</DropdownItem>
-			<DropdownItem on:click={() => goto("/settings")}>Settings</DropdownItem>
+			<DropdownItem on:click={() => goto("/profile")}><UserCircle class="h-5 w-5 inline"/> Profile</DropdownItem>
+			<DropdownItem on:click={() => goto("/settings")}><Adjustments class="h-5 w-5 inline"/> Settings</DropdownItem>
 			<DropdownDivider />
 			<DropdownItem on:click={async () => {
 				const logoutResponse = await logout()
 				if(logoutResponse.ok) goto("/login")
 				else showToastAndHideAfter("Error", logoutResponse.message ?? logoutResponse.statusText)
-			}}>Logout</DropdownItem>
+			}}><Logout class="h-5 w-5 inline"/> Logout</DropdownItem>
 		</Dropdown>
 		<NavHamburger on:click={toggle} />
 	</div>
