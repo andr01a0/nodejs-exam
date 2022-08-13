@@ -30,7 +30,7 @@
 	})
 </script>
 
-<Navbar let:avatar let:hidden let:toggle rounded={false} class="fixed top-0 left-0 right-0 z-10">
+<Navbar let:hidden let:toggle rounded={false} class="fixed top-0 left-0 right-0 z-10">
 	<NavBrand href="/">
 		<img
 			src="/images/friendster.png"
@@ -43,7 +43,7 @@
 	<div class="flex md:order-2">
 		<NotificationBell />
 		<Dropdown arrowIcon={false} inline={true}>
-			<Avatar {avatar} slot="label" />
+			<Avatar src="/images/friendster.png" slot="label" />
 			<DropdownHeader>
 				<span class="block text-sm">{`${$userStore.firstName} ${$userStore.lastName}`}</span>
 				<span class="block truncate text-sm font-medium">{$userStore.email}</span>
