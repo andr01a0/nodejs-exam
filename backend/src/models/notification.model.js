@@ -8,9 +8,9 @@ const Notification = sequelize.define('Notification', {
     allowNull: false,
     primaryKey: true
   },
-	status: {
-		type: DataTypes.BOOLEAN,
-		defaultValue: false
+	message: {
+		type: DataTypes.STRING,
+		allowNull: false
 	}
 }, 
 {})

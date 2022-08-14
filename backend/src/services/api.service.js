@@ -14,12 +14,12 @@ export default {
 
 		return await models.Profile.update(data, {
 			where: {
-				UserUserId: req.body.userId
+				userId: req.body.userId
 			}
 		})
 	},
 	getProfileByUserId: async (req, res, next) => {
-		const profile = await models.Profile.findOne({ where: { UserUserId: req.params.id } })
+		const profile = await models.Profile.findOne({ where: { userId: req.params.id } })
 		if(profile)
 			return profile
 		else
@@ -33,11 +33,11 @@ export default {
 			await models.Profile.create({
 				imageBlob: defaultProfilePicture,
 				imageMIME: 'image/png',
-				UserUserId: user.dataValues.userId
+				userId: user.dataValues.userId
 			}, { transaction: t })
 
 			await models.HasNotification.create({
-				UserUserId: user.dataValues.userId
+				userId: user.dataValues.userId
 			}, { transaction: t })
 
 			await t.commit()
@@ -52,7 +52,7 @@ export default {
 		return await models.User.findOne({ where: { email } })
 	},
 	getHasNotificationByUserId: async (req, res, next) => {
-		return await models.HasNotification.findOne({ where: { UserUserId: req.params.id } })
+		return await models.HasNotification.findOne({ where: { userId: req.params.id } })
 	}
 }
 
