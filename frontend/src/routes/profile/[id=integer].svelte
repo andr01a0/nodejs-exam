@@ -4,7 +4,10 @@
 	import { userStore } from "$lib/store"
 	import backendServer from "$lib/data/backendServer.json"
 	import { onMount } from 'svelte'
-	import { goto } from "$app/navigation";
+	import { goto, afterNavigate } from "$app/navigation";
+	import { fetchProfilePicture } from "$lib/functions/profile";
+
+	$: profilePicture = '/images/defaultAvatar.png'
 
   const handleOnSubmit = async (e) => {
 		e.preventDefault()
@@ -20,12 +23,18 @@
 				formData.append('file', file)
 				formData.append('userId', $userStore.userId)
 				// fetch endpoint to upload file
-				await fetch(`${backendServer}/api/profile`, {
+				const profileResponse = await fetch(`${backendServer}/api/profile`, {
 					method: "POST",
 					body: formData,
 					credentials: "include"
 				})
-				fetchProfile()
+				if(profileResponse.ok) {
+					profilePicture = await fetchProfilePicture(userProfileId)
+					if(profilePicture === false) {
+						showToastAndHideAfter("Error", "Could not fetch profile")
+						goto('/feed')
+					}
+				} else showToastAndHideAfter("Error", "Something went wrong")
 			}
 		} else showToastAndHideAfter("Error", "Please select a file")
   }
@@ -33,37 +42,22 @@
   // populated with data from the endpoint
   export let userProfileId
 
-	function arrayBufferToBase64( buffer ) {
-		if(buffer === undefined) return ''
-		var binary = ''
-		var bytes = new Uint8Array( buffer )
-		var len = bytes.byteLength;
-		for (var i = 0; i < len; i++) {
-			binary += String.fromCharCode( bytes[ i ] )
-		}
-		return window.btoa( binary )
-	}
-
-	$: profilePicture = '/images/defaultAvatar.png'
-
-	const fetchProfile = async () => {
-		const profileResponse = await fetch(`${backendServer}/api/profile/user/${userProfileId}`, {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			credentials: "include"
-		})
-		let profile = ''
-		if(!profileResponse.ok){
+	onMount(async () => {
+		profilePicture = await fetchProfilePicture(userProfileId)
+		if(profilePicture === false) {
 			showToastAndHideAfter("Error", "Could not fetch profile")
 			goto('/feed')
-		} else profile = await profileResponse.json()
-		profilePicture = `data:${profile.imageMIME};charset=utf-8;base64,${arrayBufferToBase64(profile.imageBlob.data)}`
-	}
+		}
+	})
 
-	onMount(async () => {
-		await fetchProfile()
+	afterNavigate(async ({ from, to }) => {
+		if(to.pathname.toString().includes('/profile')) {
+			profilePicture = await fetchProfilePicture(userProfileId)
+			if(profilePicture === false) {
+				showToastAndHideAfter("Error", "Could not fetch profile")
+				goto('/feed')
+			}
+		}
 	})
 
 </script>
