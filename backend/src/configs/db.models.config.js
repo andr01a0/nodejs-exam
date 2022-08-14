@@ -9,7 +9,9 @@ import Like from '../models/like.model.js'
 
 User.hasOne(Profile, {foreignKey: 'userId'})
 User.hasOne(HasNotification, {foreignKey: 'userId'})
+User.hasMany(Notification, {foreignKey: 'userId'})
 
+Notification.belongsTo(User, {foreignKey: 'fromUserId'})
 Connection.belongsTo(User, { foreignKey: 'fromUserId' })
 Connection.belongsTo(User, { foreignKey: 'toUserId' })
 Comment.belongsTo(User, { foreignKey: 'fromUserId' })

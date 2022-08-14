@@ -13,5 +13,11 @@ router
 .post('/profile', async (req, res, next) => {
   await apiController.updateProfile(req, res, next)
 })
+.get('/notification/user/:id', async (req, res, next) => {
+  await apiController.getNotificationByUserId(req, res, next)
+})
+.post('/notification/hasNotification', async (req, res, next) => {
+  await apiController.toggleHasNotification(req, res, next)
+})
 
 export default router

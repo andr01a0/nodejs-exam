@@ -42,5 +42,19 @@ export default {
 		} catch (err) {
 			next(err)
 		}
+	},
+	getNotificationByUserId: async (req, res, next) => {
+		try {
+			res.json(await apiService.getNotificationByUserId(req, res, next))
+		} catch (err) {
+			next(err)
+		}
+	},
+	toggleHasNotification: async (req, res, next) => {
+		try {
+			res.json(await apiService.toggleHasNotification(req, res, next))
+		} catch (err) {
+			next(err)
+		}
 	}
 }

@@ -12,11 +12,7 @@ export default {
 			imageMIME: req.file.mimetype
 		}
 
-		return await models.Profile.update(data, {
-			where: {
-				userId: req.body.userId
-			}
-		})
+		return await models.Profile.update(data, { where: { userId: req.body.userId } })
 	},
 	getProfileByUserId: async (req, res, next) => {
 		const profile = await models.Profile.findOne({ where: { userId: req.params.id } })
@@ -56,6 +52,13 @@ export default {
 	},
 	getHasNotificationByUserId: async (req, res, next) => {
 		return await models.HasNotification.findOne({ where: { userId: req.params.id } })
+	},
+	getNotificationByUserId: async (req, res, next) => {
+		return await models.Notification.findAll({ where: { userId: req.params.id }, limit: 5 })
+	},
+	toggleHasNotification: async (req, res, next) => {
+		const data = {status: 0}
+		return await models.HasNotification.update(data, { where: { userId: req.body.userId } })
 	}
 }
 
