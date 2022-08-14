@@ -36,6 +36,10 @@ export default {
 				UserUserId: user.dataValues.userId
 			}, { transaction: t })
 
+			await models.HasNotification.create({
+				UserUserId: user.dataValues.userId
+			}, { transaction: t })
+
 			await t.commit()
 
 			return user
@@ -46,6 +50,9 @@ export default {
 	},
 	getUserByEmail: async (email) => {
 		return await models.User.findOne({ where: { email } })
+	},
+	getHasNotificationByUserId: async (req, res, next) => {
+		return await models.HasNotification.findOne({ where: { UserUserId: req.params.id } })
 	}
 }
 

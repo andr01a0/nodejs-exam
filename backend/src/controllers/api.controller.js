@@ -28,6 +28,13 @@ export default {
 		} catch (err) {
 			next(err)
 		}
+	},
+	getHasNotificationByUserId: async (req, res, next) => {
+		try {
+			res.json(await apiService.getHasNotificationByUserId(req, res, next))
+		} catch (err) {
+			next(err)
+		}
 	}
 }
 	/* getMatches: async (req, res, next) => {
