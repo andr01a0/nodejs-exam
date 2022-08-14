@@ -108,3 +108,4 @@ node_modules
 *.sqlite
 .vscode
 id_rsa_priv.pem
+backend/public/data

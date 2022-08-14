@@ -37,6 +37,4 @@ User.prototype.validatePassword = (pass, hash) => {
   return bcrypt.compareSync(pass, hash)
 }
 
-await User.sync()
-
 export default User

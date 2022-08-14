@@ -9,6 +9,7 @@ import passport from 'passport'
 import jwtConfig from './src/configs/jwt.config.js'
 import apiRoute from './src/routes/api.route.js'
 import rootRoute from './src/routes/root.route.js'
+import multer from 'multer'
 
 const app = express()
 
@@ -28,6 +29,8 @@ app.use(passport.initialize())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
+const upload = multer({ dest: './public/data/uploads/' })
+app.use(upload.single('file'))
 
 // setup cors
 app.use(cors({

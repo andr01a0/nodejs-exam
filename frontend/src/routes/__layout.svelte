@@ -5,7 +5,6 @@
 	import Header from "$lib/components/Header.svelte"
 	import Footer from "$lib/components/Footer.svelte"
 	import { fade } from 'svelte/transition'
-	import { classList } from 'svelte-body'
 	import { userStore } from "$lib/store"
 	import { goto } from "$app/navigation"
 	import Toast from "$lib/components/Toast.svelte"

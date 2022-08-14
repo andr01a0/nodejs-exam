@@ -25,7 +25,7 @@
   }
 </script>
 
-<Card class="w-2/4">
+<Card class="w-2/4 max-h-fit">
 	<form class="flex flex-col space-y-6" on:submit={handleOnSubmit}>
 		<h3 class="text-xl font-medium text-gray-900 dark:text-white p-0">Sign in to our platform</h3>
 		<Label class="space-y-2">

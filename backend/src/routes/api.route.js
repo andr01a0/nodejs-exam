@@ -4,7 +4,14 @@ import apiController from '../controllers/api.controller.js'
 
 // user
 router
-.get('/match', function(req, res, next) {
+.get('/profile/user/:id', async (req, res, next) => {
+  await apiController.getProfileByUserId(req, res, next)
+})
+.post('/profile', async (req, res, next) => {
+  await apiController.updateProfile(req, res, next)
+})
+
+/* .get('/match', function(req, res, next) {
   apiController.getMatches(req, res, next)
 })
 .post('/match', function(req, res, next) {
@@ -18,6 +25,6 @@ router
 })
 .delete('/match/:id', function(req, res, next) {
   apiController.deleteMatchById(req, res, next)
-})
+}) */
 
 export default router

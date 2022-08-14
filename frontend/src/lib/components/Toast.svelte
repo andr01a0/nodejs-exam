@@ -27,24 +27,23 @@
 	}
 
 </script>
-
 <div on:click={closeToast} class="whitespace-normal">
 	{#if $toastType === "Error" || $toastType === "Warning"}
-	<Toast position="tr" simple transition="slide" bind:color={toastColor} bind:visible={$toastVisible}>
+	<Toast position="tr" simple transition="slide" bind:color={toastColor} bind:visible={$toastVisible} class="z-50">
 		<Exclamation slot="icon" />
 		{$toastMessage}
 	</Toast>
 	{/if}
 
 	{#if $toastType === "Success"}
-	<Toast position="tr" simple transition="slide" bind:color={toastColor} bind:visible={$toastVisible}>
+	<Toast position="tr" simple transition="slide" bind:color={toastColor} bind:visible={$toastVisible} class="z-50">
 		<CheckCircle slot="icon" />
 		{$toastMessage}
 	</Toast>
 	{/if}
 
 	{#if $toastType === "Info"}
-	<Toast position="tr" simple transition="slide" bind:color={toastColor} bind:visible={$toastVisible}>
+	<Toast position="tr" simple transition="slide" bind:color={toastColor} bind:visible={$toastVisible} class="z-50">
 		<InformationCircle slot="icon" />
 		{$toastMessage}
 	</Toast>
