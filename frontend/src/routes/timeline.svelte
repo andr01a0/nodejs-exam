@@ -26,7 +26,7 @@
 	];
 </script>
 
-<div class="whitespace-normal">
+<div class="whitespace-normal w-3/4">
 	<Activity>
 		<ActivityItem {activities} />
 	</Activity>

@@ -64,7 +64,7 @@
 
 <Card bind:img={profilePicture} reverse={false} class="text-center p-2">
 	{#if $userStore.userId === parseInt(userProfileId)}
-  <h5 class="mb-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">Profile</h5>
+  <h5 class="mb-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">{`${$userStore.firstName} ${$userStore.lastName}`}</h5>
   <form class="flex flex-col space-y-6" on:submit={handleOnSubmit} enctype="multipart/form-data">
 		<Label class="space-y-2">
 			<span>Change Profile Picture (MAX FILE SIZE = 2MB)</span>

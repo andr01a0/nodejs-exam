@@ -12,8 +12,10 @@
 	import { showToastAndHideAfter } from "$lib/functions/toast"
 	import NotificationBell from "$lib/components/NotificationBell.svelte"
 	import { UserCircle, Adjustments, Logout } from "svelte-heros"
+	import { fetchProfilePicture } from "$lib/functions/profile"
 
 	$: activeNavLink = null
+	$: userProfilePicture = '/images/defaultAvatar.png'
 
 	const changeActiveNavLink = async (path) => {
 		if(headerPaths.includes(path))
@@ -24,9 +26,13 @@
 
 	onMount(async() => {
 		changeActiveNavLink(window.location.pathname)
+		if($userStore !== null)
+			userProfilePicture = await fetchProfilePicture($userStore.userId)
 	})
 	afterNavigate(async ({ from, to }) => {
 		changeActiveNavLink(to.pathname)
+		if($userStore !== null)
+			userProfilePicture = await fetchProfilePicture($userStore.userId)
 	})
 </script>
 
@@ -43,7 +49,7 @@
 	<div class="flex md:order-2">
 		<NotificationBell />
 		<Dropdown arrowIcon={false} inline={true}>
-			<Avatar src="/images/friendster.png" slot="label" />
+			<Avatar bind:src={userProfilePicture} slot="label" />
 			<DropdownHeader>
 				<span class="block text-sm">{`${$userStore.firstName} ${$userStore.lastName}`}</span>
 				<span class="block truncate text-sm font-medium">{$userStore.email}</span>
