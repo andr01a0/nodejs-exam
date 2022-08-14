@@ -29,6 +29,13 @@ export default {
 			next(err)
 		}
 	},
+	getUserById: async (id, next) => {
+		try {
+			return await apiService.getUserById(id)
+		} catch (err) {
+			next(err)
+		}
+	},
 	getHasNotificationByUserId: async (req, res, next) => {
 		try {
 			res.json(await apiService.getHasNotificationByUserId(req, res, next))

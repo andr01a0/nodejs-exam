@@ -51,6 +51,9 @@ export default {
 	getUserByEmail: async (email) => {
 		return await models.User.findOne({ where: { email } })
 	},
+	getUserById: async (id) => {
+		return await models.User.findOne({ where: { userId: id } })
+	},
 	getHasNotificationByUserId: async (req, res, next) => {
 		return await models.HasNotification.findOne({ where: { userId: req.params.id } })
 	}
