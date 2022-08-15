@@ -5,10 +5,11 @@
 	import backendServer from "$lib/data/backendServer.json"
 	import { onMount } from 'svelte'
 	import { goto, afterNavigate } from "$app/navigation";
-	import { fetchProfilePicture } from "$lib/functions/profile";
+	import { fetchProfilePicture, fetchFullNameByUserId } from "$lib/functions/profile";
 
 	$: profilePicture = '/images/defaultAvatar.png'
 	
+	$: publicProfileName = 'Public Profile'
 
   const handleOnSubmit = async (e) => {
 		e.preventDefault()
@@ -45,6 +46,7 @@
 
 	onMount(async () => {
 		profilePicture = await fetchProfilePicture(userProfileId)
+		publicProfileName = await fetchFullNameByUserId(userProfileId)
 		if(profilePicture === false) {
 			showToastAndHideAfter("Error", "Could not fetch profile")
 			goto('/feed')
@@ -54,6 +56,7 @@
 	afterNavigate(async ({ from, to }) => {
 		if(to.pathname.toString().includes('/profile')) {
 			profilePicture = await fetchProfilePicture(userProfileId)
+			publicProfileName = await fetchFullNameByUserId(userProfileId)
 			if(profilePicture === false) {
 				showToastAndHideAfter("Error", "Could not fetch profile")
 				goto('/feed')
@@ -74,6 +77,6 @@
 		<Button type="submit" class="w-full1">Submit</Button>
 	</form>
 	{:else}
-	<h5 class="mb-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">Profile</h5>
+	<h5 class="mb-2 text-4xl font-bold tracking-tight text-gray-900 dark:text-white">{publicProfileName}</h5>
 	{/if}
 </Card>
