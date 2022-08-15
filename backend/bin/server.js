@@ -28,7 +28,12 @@ const server = http.createServer(app)
  * Create Socket server.
  */
 
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"]
+  }
+})
 
 /**
  * Listen on provided port, on all network interfaces.

@@ -62,14 +62,24 @@ export default {
 		return await models.HasNotification.update(data, { where: { userId: req.body.userId } })
 	},
 	getAllNotificationByUserId: async (req, res, next) => {
-		const notifications = await sequelize.query(`SELECT * FROM Notifications n WHERE n.fromUserId = (SELECT c1.toUserId FROM Connections c1 WHERE c1.fromUserId = :userId AND c1.status = 'FRIENDS') OR n.fromUserId = (SELECT c2.fromUserId FROM Connections c2 WHERE c2.toUserId = :userId AND c2.status = 'FRIENDS')`,
+		const notifications = await sequelize.query(`SELECT n.* FROM Notifications n 
+		INNER JOIN Connections c ON n.fromUserId = c.toUserId OR n.fromUserId = c.fromUserId
+		WHERE c.fromUserId = :userId OR c.toUserId = :userId`,
 			{
 				replacements: { userId: req.params.id },
-				type: QueryTypes.SELECT,
-				//logging: console.log
+				type: QueryTypes.SELECT
 			},
 		)
 		return notifications
+	},
+	getFullNameByUserId: async (req, res, next) => {
+		const fullName = await sequelize.query(`SELECT (firstName || ' ' || lastName) AS fullName FROM Users WHERE userId = :userId`,
+			{
+				replacements: { userId: req.params.id },
+				type: QueryTypes.SELECT
+			},
+		)
+		return fullName[0].fullName
 	}
 }
 

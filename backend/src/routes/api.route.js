@@ -22,5 +22,8 @@ router
 .post('/notification/hasNotification', async (req, res, next) => {
   await apiController.toggleHasNotification(req, res, next)
 })
+.get('/user/fullname/:id', async (req, res, next) => {
+  await apiController.getFullNameByUserId(req, res, next)
+})
 
 export default router

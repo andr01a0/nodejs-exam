@@ -24,3 +24,16 @@ export const fetchProfilePicture = async (userId) => {
 		return `data:${profile.imageMIME};charset=utf-8;base64,${arrayBufferToBase64(profile.imageBlob.data)}`
 	} else return false
 }
+
+export const fetchFullNameByUserId = async (userId) => {
+	const fullNameResponse = await fetch(`${backendServer}/api/user/fullname/${userId}`, {
+		method: "GET",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		credentials: "include"
+	})
+	if(fullNameResponse.ok) {
+		return await fullNameResponse.json()
+	} else return false
+}

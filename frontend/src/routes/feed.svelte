@@ -7,7 +7,10 @@
 	import { showToastAndHideAfter } from "$lib/functions/toast"
 	import { isDateToday } from "$lib/functions/time"
 	import backendServer from "$lib/data/backendServer.json"
-  import { fetchProfilePicture } from "$lib/functions/profile"
+  import { fetchProfilePicture, fetchFullNameByUserId } from "$lib/functions/profile"
+	import { io } from "socket.io-client"
+
+	const socket = io("http://localhost:3000")
 
 	$: notifications = []
 	$: timelines = []
@@ -28,7 +31,7 @@
 		timelines = [{
 				title: "No notifications today",
 				src: "/images/friendster.png",
-				comment: "You have no notifications",
+				//comment: "You have no notifications",
 		}]
 		await fetchAllNotifications()
 		if(notifications.length > 0) {
@@ -37,8 +40,10 @@
 					if(timelines[0].title === "No notifications today") {
 						timelines = []
 					}
+					const fromName = await fetchFullNameByUserId(notification.fromUserId)
+					const toName = await fetchFullNameByUserId(notification.userId)
 					timelines = [...timelines, {
-						title: `${notification.fromUserId} : ${notification.userId}`,
+						title: `${fromName} : ${toName}`,
 						src: `${await fetchProfilePicture(notification.fromUserId)}`,
 						comment: notification.message,
 					}]
@@ -49,6 +54,8 @@
 
 </script>
 
-<Group date="Today">
-  <GroupItem {timelines} />
-</Group>
+<div class="whitespace-wrap">
+	<Group date="Today">
+		<GroupItem {timelines} />
+	</Group>
+</div>

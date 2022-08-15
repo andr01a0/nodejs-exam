@@ -63,5 +63,12 @@ export default {
 		} catch (err) {
 			next(err)
 		}
+	},
+	getFullNameByUserId: async (req, res, next) => {
+		try {
+			res.json(await apiService.getFullNameByUserId(req, res, next))
+		} catch (err) {
+			next(err)
+		}
 	}
 }
