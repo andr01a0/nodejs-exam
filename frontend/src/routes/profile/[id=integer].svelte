@@ -8,6 +8,7 @@
 	import { fetchProfilePicture } from "$lib/functions/profile";
 
 	$: profilePicture = '/images/defaultAvatar.png'
+	
 
   const handleOnSubmit = async (e) => {
 		e.preventDefault()

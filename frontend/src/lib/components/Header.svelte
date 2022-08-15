@@ -18,6 +18,10 @@
 	$: userProfilePicture = '/images/defaultAvatar.png'
 
 	const changeActiveNavLink = async (path) => {
+		// if path has more than one segment, remove the last one, otherwise keep it as it is
+		const pathWithoutLastSegment = path.split('/').slice(0, -1).join('/')
+		if(pathWithoutLastSegment)
+			path = pathWithoutLastSegment
 		if(headerPaths.includes(path))
 			activeNavLink = path
 		else
@@ -67,7 +71,7 @@
 	</div>
 	<NavUl {hidden}>
 		<NavLi href="/feed" active={activeNavLink === "/feed"}>Feed</NavLi>
-		<NavLi href="/timeline" active={activeNavLink === "/timeline"}>Timeline</NavLi>
+		<NavLi href={`/timeline/${$userStore.userId}`} active={activeNavLink === "/timeline"}>Timeline</NavLi>
 		<NavLi href="/friends" active={activeNavLink === "/friends"}>Friends</NavLi>
 	</NavUl>
 	{:else}

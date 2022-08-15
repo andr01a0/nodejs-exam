@@ -54,7 +54,7 @@
 
 </script>
 
-<div class="whitespace-wrap">
+<div class="whitespace-normal">
 	<Group date="Today">
 		<GroupItem {timelines} />
 	</Group>

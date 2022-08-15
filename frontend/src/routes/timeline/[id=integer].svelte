@@ -23,10 +23,13 @@
 			alt: 'image alt here',
 			src: '/images/friendster.png'
 		}
-	];
+	]
+
+	export let userTimelineId
 </script>
 
 <div class="whitespace-normal w-3/4">
+	{userTimelineId}
 	<Activity>
 		<ActivityItem {activities} />
 	</Activity>
