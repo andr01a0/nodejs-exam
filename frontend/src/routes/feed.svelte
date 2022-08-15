@@ -12,8 +12,8 @@
 	$: notifications = []
 	$: timelines = []
 
-	const fetchNotifications = async () => {
-    const notificationsResponse = await fetch(`${backendServer}/api/notification/user/${$userStore.userId}`, {
+	const fetchAllNotifications = async () => {
+    const notificationsResponse = await fetch(`${backendServer}/api/notification/all/user/${$userStore.userId}`, {
       method: "GET",
       credentials: "include"
     })
@@ -25,7 +25,12 @@
   }
 
 	onMount(async () => {
-		await fetchNotifications()
+		timelines = [{
+				title: "No notifications today",
+				src: "/images/friendster.png",
+				comment: "You have no notifications",
+		}]
+		await fetchAllNotifications()
 		if(notifications.length > 0) {
 			for(let notification of notifications) {
 				if(isDateToday(notification.createdAt)) {
@@ -36,12 +41,6 @@
 					}]
 				}
 			}
-		} else {
-			timelines = [{
-				title: "No notifications",
-				src: "/images/friendster.png",
-				comment: "You have no notifications",
-			}]
 		}
 	})
 

@@ -1,6 +1,7 @@
 import { models } from '../configs/db.models.config.js'
 import { sequelize } from '../configs/db.config.js'
 import fs from 'fs'
+import { QueryTypes } from 'sequelize'
 
 const defaultProfilePicture = fs.readFileSync('./public/images/friendster.png')
 
@@ -59,6 +60,16 @@ export default {
 	toggleHasNotification: async (req, res, next) => {
 		const data = {status: 0}
 		return await models.HasNotification.update(data, { where: { userId: req.body.userId } })
+	},
+	getAllNotificationByUserId: async (req, res, next) => {
+		const notifications = await sequelize.query(`SELECT * FROM Notifications n WHERE n.fromUserId = (SELECT c1.toUserId FROM Connections c1 WHERE c1.fromUserId = :userId) OR n.fromUserId = (SELECT c2.fromUserId FROM Connections c2 WHERE c2.toUserId = :userId)`,
+			{
+				replacements: { userId: req.params.id },
+				type: QueryTypes.SELECT,
+				//logging: console.log
+			},
+		)
+		return notifications
 	}
 }
 

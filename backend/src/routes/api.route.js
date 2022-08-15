@@ -16,6 +16,9 @@ router
 .get('/notification/user/:id', async (req, res, next) => {
   await apiController.getNotificationByUserId(req, res, next)
 })
+.get('/notification/all/user/:id', async (req, res, next) => {
+  await apiController.getAllNotificationByUserId(req, res, next)
+})
 .post('/notification/hasNotification', async (req, res, next) => {
   await apiController.toggleHasNotification(req, res, next)
 })

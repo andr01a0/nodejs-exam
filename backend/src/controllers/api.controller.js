@@ -56,5 +56,12 @@ export default {
 		} catch (err) {
 			next(err)
 		}
+	},
+	getAllNotificationByUserId: async (req, res, next) => {
+		try {
+			res.json(await apiService.getAllNotificationByUserId(req, res, next))
+		} catch (err) {
+			next(err)
+		}
 	}
 }
