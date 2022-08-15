@@ -28,14 +28,14 @@
 		await fetchNotifications()
 		if(notifications.length > 0) {
 			for(let notification of notifications) {
-			if(isDateToday(notification.createdAt)) {
-				timelines = [...timelines, {
-					title: `${notification.fromUserId} : ${notification.userId}`,
-					src: `${await fetchProfilePicture(notification.fromUserId)}`,
-					comment: notification.message,
-				}]
+				if(isDateToday(notification.createdAt)) {
+					timelines = [...timelines, {
+						title: `${notification.fromUserId} : ${notification.userId}`,
+						src: `${await fetchProfilePicture(notification.fromUserId)}`,
+						comment: notification.message,
+					}]
+				}
 			}
-		}
 		} else {
 			timelines = [{
 				title: "No notifications",
