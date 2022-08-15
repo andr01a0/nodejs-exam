@@ -2,26 +2,49 @@
   import { 
     Group, GroupItem
   } from "flowbite-svelte"
-	let timelines = [
-		{
-			title:
-				`<span class="font-medium text-gray-900 dark:text-white">Jese Leos</span> likes <span class="font-medium text-gray-900 dark:text-white">Bonnie Green's</span> post in <span class="font-medium text-gray-900 dark:text-white"> How to start with Flowbite library</span>`,
-			src: '/images/friendster.png',
-			alt: 'alt here',
-			href: '/',
-			isPrivate: true,
-			comment: '"I wanted to share a webinar zeroheight."'
-		},
-		{
-			title:
-				`<span class="font-medium text-gray-900 dark:text-white">Bonnie Green</span> react to <span class="font-medium text-gray-900 dark:text-white">Thomas Lean's</span> comment`,
-			src: '/images/friendster.png',
-			alt: 'alt here',
-			href: '/',
-			isPrivate: true,
-			comment: '"I wanted to share a webinar zeroheight."'
+	import { onMount } from "svelte"
+	import { userStore } from "$lib/store"
+	import { showToastAndHideAfter } from "$lib/functions/toast"
+	import { isDateToday } from "$lib/functions/time"
+	import backendServer from "$lib/data/backendServer.json"
+  import { fetchProfilePicture } from "$lib/functions/profile"
+
+	$: notifications = []
+	$: timelines = []
+
+	const fetchNotifications = async () => {
+    const notificationsResponse = await fetch(`${backendServer}/api/notification/user/${$userStore.userId}`, {
+      method: "GET",
+      credentials: "include"
+    })
+    if(notificationsResponse.ok) {
+      notifications = await notificationsResponse.json()
+    } else {
+      showToastAndHideAfter("Error", "Could not get notifications")
+    }
+  }
+
+	onMount(async () => {
+		await fetchNotifications()
+		if(notifications.length > 0) {
+			for(let notification of notifications) {
+			if(isDateToday(notification.createdAt)) {
+				timelines = [...timelines, {
+					title: `${notification.fromUserId} : ${notification.userId}`,
+					src: `${await fetchProfilePicture(notification.fromUserId)}`,
+					comment: notification.message,
+				}]
+			}
 		}
-	]
+		} else {
+			timelines = [{
+				title: "No notifications",
+				src: "/images/friendster.png",
+				comment: "You have no notifications",
+			}]
+		}
+	})
+
 </script>
 
 <Group date="Today">

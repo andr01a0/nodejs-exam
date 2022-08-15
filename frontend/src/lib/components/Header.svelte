@@ -55,7 +55,7 @@
 				<span class="block truncate text-sm font-medium">{$userStore.email}</span>
 			</DropdownHeader>
 			<DropdownItem on:click={() => goto(`/profile/${$userStore.userId}`)}><UserCircle class="h-5 w-5 inline"/> Profile</DropdownItem>
-			<DropdownItem on:click={() => goto("/settings")}><Adjustments class="h-5 w-5 inline"/> Settings</DropdownItem>
+			<!--DropdownItem on:click={() => goto("/settings")}><Adjustments class="h-5 w-5 inline"/> Settings</DropdownItem-->
 			<DropdownDivider />
 			<DropdownItem on:click={async () => {
 				const logoutResponse = await logout()

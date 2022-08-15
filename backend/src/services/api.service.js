@@ -63,8 +63,6 @@ export default {
 }
 
 
-
-
 /* 	getMatches: async (req, res, next) => {
 			return await models.Match.findAll()
 	},
