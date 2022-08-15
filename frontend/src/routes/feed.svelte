@@ -12,6 +12,10 @@
 
 	const socket = io("http://localhost:3000")
 
+	socket.on("notificationsUpdated", async (...args) => {
+		await updateNotifications()
+	})
+
 	$: notifications = []
 	$: timelines = []
 
@@ -27,7 +31,7 @@
     }
   }
 
-	onMount(async () => {
+	const updateNotifications = async () => {
 		timelines = [{
 				title: "No notifications today",
 				src: "/images/friendster.png",
@@ -50,6 +54,10 @@
 				}
 			}
 		}
+	}
+
+	onMount(async () => {
+		await updateNotifications()
 	})
 
 </script>
