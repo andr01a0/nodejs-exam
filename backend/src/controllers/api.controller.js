@@ -70,5 +70,26 @@ export default {
 		} catch (err) {
 			next(err)
 		}
+	},
+	getFriendsByUserId: async (req, res, next) => {
+		try {
+			res.json(await apiService.getFriendsByUserId(req, res, next))
+		} catch (err) {
+			next(err)
+		}
+	},
+	getFriendRequestsByUserId: async (req, res, next) => {
+		try {
+			res.json(await apiService.getFriendRequestsByUserId(req, res, next))
+		} catch (err) {
+			next(err)
+		}
+	},
+	getAllUsersExceptById: async (req, res, next) => {
+		try {
+			res.json(await apiService.getAllUsersExceptById(req, res, next))
+		} catch (err) {
+			next(err)
+		}
 	}
 }

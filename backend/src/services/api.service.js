@@ -1,7 +1,8 @@
 import { models } from '../configs/db.models.config.js'
 import { sequelize } from '../configs/db.config.js'
 import fs from 'fs'
-import { QueryTypes } from 'sequelize'
+import { QueryTypes, Op } from 'sequelize'
+import { userDTO } from '../dto/user.js'
 
 const defaultProfilePicture = fs.readFileSync('./public/images/friendster.png')
 
@@ -64,7 +65,7 @@ export default {
 	getAllNotificationByUserId: async (req, res, next) => {
 		const notifications = await sequelize.query(`SELECT n.* FROM Notifications n 
 		INNER JOIN Connections c ON n.fromUserId = c.toUserId OR n.fromUserId = c.fromUserId
-		WHERE (c.fromUserId = :userId OR c.toUserId = :userId) AND n.fromUserId != :userId`,
+		WHERE (c.fromUserId = :userId OR c.toUserId = :userId) AND n.fromUserId != :userId AND c.status = 'FRIENDS'`,
 			{
 				replacements: { userId: req.params.id },
 				type: QueryTypes.SELECT
@@ -80,6 +81,31 @@ export default {
 			},
 		)
 		return fullName[0].fullName
+	},
+	getFriendsByUserId: async (req, res, next) => {
+		const friends = await sequelize.query(`SELECT u.* FROM Users u 
+		INNER JOIN Connections c ON u.userId = c.toUserId OR u.userId = c.fromUserId
+		WHERE (c.fromUserId = :userId OR c.toUserId = :userId) AND u.userId != :userId AND c.status = 'FRIENDS'`,
+			{
+				replacements: { userId: req.params.id },
+				type: QueryTypes.SELECT
+			},
+		)
+		return friends
+	},
+	getFriendRequestsByUserId: async (req, res, next) => {
+		const friendRequests = await sequelize.query(`SELECT u.* FROM Users u 
+		INNER JOIN Connections c ON u.userId = c.fromUserId
+		WHERE c.toUserId = :userId AND c.status = 'PENDING'`,
+			{
+				replacements: { userId: req.params.id },
+				type: QueryTypes.SELECT
+			},
+		)
+		return friendRequests
+	},
+	getAllUsersExceptById: async (req, res, next) => {
+		return await models.User.findAll({ attributes: {exclude: ['password', 'createdAt', 'updatedAt']}, where: { userId: { [Op.ne]: req.params.id } } })
 	}
 }
 

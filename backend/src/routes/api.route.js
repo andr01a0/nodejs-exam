@@ -25,5 +25,14 @@ router
 .get('/user/fullname/:id', async (req, res, next) => {
   await apiController.getFullNameByUserId(req, res, next)
 })
+.get('/friend/user/:id', async (req, res, next) => {
+  await apiController.getFriendsByUserId(req, res, next)
+})
+.get('/friend/request/user/:id', async (req, res, next) => {
+  await apiController.getFriendRequestsByUserId(req, res, next)
+})
+.get('/user/except/:id', async (req, res, next) => {
+  await apiController.getAllUsersExceptById(req, res, next)
+})
 
 export default router
