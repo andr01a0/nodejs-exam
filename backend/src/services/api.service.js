@@ -64,7 +64,7 @@ export default {
 	getAllNotificationByUserId: async (req, res, next) => {
 		const notifications = await sequelize.query(`SELECT n.* FROM Notifications n 
 		INNER JOIN Connections c ON n.fromUserId = c.toUserId OR n.fromUserId = c.fromUserId
-		WHERE c.fromUserId = :userId OR c.toUserId = :userId`,
+		WHERE (c.fromUserId = :userId OR c.toUserId = :userId) AND n.fromUserId != :userId`,
 			{
 				replacements: { userId: req.params.id },
 				type: QueryTypes.SELECT
