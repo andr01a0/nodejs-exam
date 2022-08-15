@@ -91,6 +91,11 @@ export default {
 				type: QueryTypes.SELECT
 			},
 		)
+		friends.forEach(friend => {
+			delete friend.password
+			delete friend.createdAt
+			delete friend.updatedAt
+		} )
 		return friends
 	},
 	getFriendRequestsByUserId: async (req, res, next) => {
@@ -102,6 +107,11 @@ export default {
 				type: QueryTypes.SELECT
 			},
 		)
+		friendRequests.forEach(friendRequest => {
+			delete friendRequest.password
+			delete friendRequest.createdAt
+			delete friendRequest.updatedAt
+		} )
 		return friendRequests
 	},
 	getAllUsersExceptById: async (req, res, next) => {
