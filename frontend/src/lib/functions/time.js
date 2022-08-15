@@ -24,8 +24,6 @@ export const howLongAgo = (date) => {
 }
 
 export const isDateToday = (date) => {
-	console.log('date: ', new Date(date))
-	console.log('today: ', new Date())
 	const today = new Date()
 	const dateToCompare = new Date(date)
 	return dateToCompare.getDate() === today.getDate() && dateToCompare.getMonth() === today.getMonth() && dateToCompare.getFullYear() === today.getFullYear()

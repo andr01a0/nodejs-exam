@@ -62,7 +62,7 @@ export default {
 		return await models.HasNotification.update(data, { where: { userId: req.body.userId } })
 	},
 	getAllNotificationByUserId: async (req, res, next) => {
-		const notifications = await sequelize.query(`SELECT * FROM Notifications n WHERE n.fromUserId = (SELECT c1.toUserId FROM Connections c1 WHERE c1.fromUserId = :userId) OR n.fromUserId = (SELECT c2.fromUserId FROM Connections c2 WHERE c2.toUserId = :userId)`,
+		const notifications = await sequelize.query(`SELECT * FROM Notifications n WHERE n.fromUserId = (SELECT c1.toUserId FROM Connections c1 WHERE c1.fromUserId = :userId AND c1.status = 'FRIENDS') OR n.fromUserId = (SELECT c2.fromUserId FROM Connections c2 WHERE c2.toUserId = :userId AND c2.status = 'FRIENDS')`,
 			{
 				replacements: { userId: req.params.id },
 				type: QueryTypes.SELECT,

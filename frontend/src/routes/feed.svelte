@@ -34,6 +34,9 @@
 		if(notifications.length > 0) {
 			for(let notification of notifications) {
 				if(isDateToday(notification.createdAt)) {
+					if(timelines[0].title === "No notifications today") {
+						timelines = []
+					}
 					timelines = [...timelines, {
 						title: `${notification.fromUserId} : ${notification.userId}`,
 						src: `${await fetchProfilePicture(notification.fromUserId)}`,
