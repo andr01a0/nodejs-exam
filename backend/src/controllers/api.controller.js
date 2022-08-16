@@ -119,5 +119,19 @@ export default {
 		} catch (err) {
 			next(err)
 		}
+	},
+	getUserComments: async (req, res, next) => {
+		try {
+			res.json(await apiService.getUserComments(req, res, next))
+		} catch (err) {
+			next(err)
+		}
+	},
+	addComment: async (req, res, next) => {
+		try {
+			res.json(await apiService.addComment(req, res, next))
+		} catch (err) {
+			next(err)
+		}
 	}
 }

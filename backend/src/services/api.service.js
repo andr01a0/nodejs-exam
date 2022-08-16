@@ -175,48 +175,38 @@ export default {
 			await t.rollback()
 			next(error)
 		}
+	},
+	getUserComments: async (req, res, next) => {
+		return await sequelize.query(`SELECT c.*, u.firstName, u.lastName FROM Comments c 
+		INNER JOIN Users u ON c.fromUserId = u.userId
+		WHERE c.toUserId = :userId`,
+			{
+				replacements: { userId: req.params.userId },
+				type: QueryTypes.SELECT
+			}
+		)
+	},
+	addComment: async (req, res, next) => {
+		const t = await sequelize.transaction()
+		try {
+			const comment = await models.Comment.create({
+				fromUserId: req.body.userFrom,
+				toUserId: req.body.userTo,
+				message: req.body.comment
+			}, { transaction: t })
+			// create notification if not the same user
+			if (req.body.userFrom !== req.body.userTo) {
+				await models.Notification.create({
+					fromUserId: req.body.userFrom,
+					userId: req.body.userTo,
+					message: `${req.body.userFromName} commented on ${req.body.userToName} profile`
+				}, { transaction: t })
+			}
+			await t.commit()
+			return comment
+		} catch (error) {
+			await t.rollback()
+			next(error)
+		}
 	}
 }
-
-
-/* 	getMatches: async (req, res, next) => {
-			return await models.Match.findAll()
-	},
-	createMatch: async (req, res, next) => {
-		const match = await models.Match.create({
-			matchName: req.body.matchName,
-			leftTeam: req.body.leftTeam,
-			rightTeam: req.body.rightTeam,
-			score: req.body.score,
-			username: req.user.username
-		})
-		return match
-	},
-	getMatchById: async (req, res, next) => {
-		return await models.Match.findOne({
-			where: {
-				matchId: req.params.id
-			}
-		})
-	},
-	updateMatchById: async (req, res, next) => {
-		const data = {}
-		if (req.body.matchName) data.matchName = req.body.matchName
-		if (req.body.leftTeam) data.leftTeam = req.body.leftTeam
-		if (req.body.rightTeam) data.rightTeam = req.body.rightTeam
-		if (req.body.score) data.score = req.body.score
-		return await models.Match.update(data, {
-			where: {
-				matchId: req.params.id
-			}
-		})
-	},
-	deleteMatchById: async (req, res, next) => {
-		return await models.Match.destroy({
-			where: {
-				matchId: req.params.id
-			}
-		})
-	}
-}
- */

@@ -1,36 +1,107 @@
 <script>
   import { 
-    Activity, ActivityItem 
+    Activity, ActivityItem, Textarea, Button
   } from "flowbite-svelte"
-	let activities = [
+	import { showToastAndHideAfter } from "$lib/functions/toast"
+	import { goto } from "$app/navigation"
+	import { userStore } from "$lib/store"
+	import { onMount } from "svelte"
+	import backendServer from "$lib/data/backendServer.json"
+	import { howLongAgo } from "$lib/functions/time"
+	import { fetchProfilePicture, fetchFullNameByUserId } from "$lib/functions/profile"
+
+	$: comments = []
+
+	export let userTimelineId
+
+	const fetchUserComments = async () => {
+		// fetch all comments from this timeline
+		const response = await fetch(`${backendServer}/api/user/${userTimelineId}/comment`, {
+			method: "GET",
+			credentials: "include"
+		})
+		if(response.ok) {
+			comments = await response.json()
+		} else {
+			showToastAndHideAfter("Error", response.message ?? response.statusText)
+		}
+	}
+
+	// build activity items from comments
+	const buildActivities = async () => {
+		// build activity items from comments async
+		const activitiesList = []
+		for(let comment of comments) {
+			const activity = {
+				title: await fetchFullNameByUserId(comment.fromUserId),
+				src: await fetchProfilePicture(comment.fromUserId),
+				date: howLongAgo(comment.createdAt),
+				text: comment.message
+			}
+			activitiesList.push(activity)
+		}
+		activities = activitiesList.reverse()
+	}
+
+	onMount(async () => {
+		await fetchUserComments()
+		await buildActivities()
+	})
+
+	$: activities = [
 		{
-			title:
-				'Bonnie moved <a href="/" class="font-semibold text-blue-600 dark:text-blue-500 hover:underline">Jese Leos</a> to <span class="bg-gray-100 text-gray-800 text-xs font-normal mr-2 px-2.5 py-0.5 rounded dark:bg-gray-600 dark:text-gray-300">Funny Group</span>',
+			title: `No comments yet`,
 			date: 'just now',
-			alt: 'image alt here',
-			src: '/images/friendster.png'
-		},
-		{
-			title: 'We don\'t serve their kind here! What? Your droids. ',
-			date: '2 hours ago',
-			alt: 'image alt here',
 			src: '/images/friendster.png',
-			text: 'The approach will not be easy. You are required to maneuver straight down this trench and skim the surface to this point. The target area is only two meters wide. '
-		},
-		{
-			title: 'They\'ll have to wait outside. We don\'t want them here. ',
-			date: '1 day ago',
-			alt: 'image alt here',
-			src: '/images/friendster.png'
+			text: 'Be the first to comment!'
 		}
 	]
 
-	export let userTimelineId
+	let textareaprops = {
+		id: 'comment',
+		name: 'comment',
+		label: 'Your message',
+		rows: 4,
+		placeholder: 'Leave a comment...',
+	}
+
+	const handleOnSubmit = async (e) => {
+		e.preventDefault()
+		const formData = new FormData(e.target)
+		const data = {
+			comment: formData.get("comment"),
+			userFrom: $userStore.userId,
+			userFromName: await fetchFullNameByUserId($userStore.userId),
+			userTo: userTimelineId,
+			userToName: await fetchFullNameByUserId(userTimelineId),
+		}
+		const response = await fetch(`${backendServer}/api/comment`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(data),
+			credentials: 'include'
+		})
+		if(response.ok) {
+			const comment = await response.json()
+			comments = [...comments, comment]
+			textareaprops.value = ''
+			showToastAndHideAfter("Success", "Comment posted")
+		} else {
+			showToastAndHideAfter('Error', response.message ?? response.statusText)
+		}
+	}
 </script>
 
-<div class="whitespace-normal w-3/4">
-	{userTimelineId}
-	<Activity>
-		<ActivityItem {activities} />
-	</Activity>
+<div class="flex-row w-2/4">
+	<form class="flex flex-col space-y-6" on:submit={handleOnSubmit}>
+		<Textarea {...textareaprops} />
+		<Button type="submit" class="w-full1">Comment</Button>
+	</form>
+	<div class="whitespace-normal mt-10">
+		<Activity>
+			<ActivityItem {activities} />
+		</Activity>
+	</div>
 </div>
