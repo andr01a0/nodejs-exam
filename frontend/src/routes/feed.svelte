@@ -8,13 +8,6 @@
 	import { isDateToday } from "$lib/functions/time"
 	import backendServer from "$lib/data/backendServer.json"
   import { fetchProfilePicture, fetchFullNameByUserId } from "$lib/functions/profile"
-	import { io } from "socket.io-client"
-
-	const socket = io("http://localhost:3000")
-
-	socket.on("notificationsUpdated", async (...args) => {
-		await updateNotifications()
-	})
 
 	$: notifications = []
 	$: timelines = []

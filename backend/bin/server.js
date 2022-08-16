@@ -9,7 +9,6 @@ import debug from 'debug'
 debug('backend:server')
 import http from 'http'
 import { Server } from 'socket.io'
-import onConnection from '../src/middlewares/socket.middleware.js'
 
 /**
  * Get port from environment and store in Express.
@@ -58,7 +57,11 @@ io.use((socket, next) => {
   }
 }) */
 
-io.on('connection', onConnection)
+io.on("connection", (socket) => {
+  socket.on("timelineUpdated", () => {
+    io.sockets.emit("timelineUpdated")
+  })
+})
 
 /**
  * Normalize a port into a number, string, or false.

@@ -195,7 +195,6 @@ export default {
 				message: req.body.comment
 			}, { transaction: t })
 			// create notification if not the same user
-			console.log(req.body)
 			if (req.body.userFrom !== parseInt(req.body.userTo)) {
 				await models.Notification.create({
 					fromUserId: req.body.userFrom,

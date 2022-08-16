@@ -9,6 +9,15 @@
 	import backendServer from "$lib/data/backendServer.json"
 	import { howLongAgo } from "$lib/functions/time"
 	import { fetchProfilePicture, fetchFullNameByUserId } from "$lib/functions/profile"
+	import { io } from "socket.io-client"
+
+	const socket = io("http://localhost:3000")
+
+	socket.on("timelineUpdated", async () => {
+		console.log('client socket')
+		await fetchUserComments()
+		await buildActivities()
+	})
 
 	$: comments = []
 
@@ -107,6 +116,7 @@
 			comments = [...comments, comment]
 			textareaprops.value = ''
 			showToastAndHideAfter("Success", "Comment posted")
+			socket.emit("timelineUpdated")
 		} else {
 			showToastAndHideAfter('Error', response.message ?? response.statusText)
 		}
