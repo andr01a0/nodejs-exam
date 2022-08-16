@@ -4,7 +4,6 @@
     TableSearch, TableHead, TableHeadCell, TableBody, 
     TableBodyRow, TableBodyCell, Avatar
   } from 'flowbite-svelte'
-  import { onMount } from 'svelte'
   import { userStore } from "$lib/store"
   import backendServer from "$lib/data/backendServer.json"
   import { fetchProfilePicture, fetchFullNameByUserId } from "$lib/functions/profile"
@@ -166,7 +165,7 @@
             {#each filteredFriends as profile}
               <TableBodyRow>
                 <TableBodyCell><div on:click={goto(`/profile/${profile.userId}`)}><Avatar src={profile.profilePicture} /></div></TableBodyCell>
-                <TableBodyCell>{profile.fullName}</TableBodyCell>
+                <TableBodyCell><div on:click={goto(`/timeline/${profile.userId}`)}>{profile.fullName}</div></TableBodyCell>
                 <TableBodyCell><div on:click={removeFriend(profile.userId)}><Trash color="#ff0000"/></div></TableBodyCell>
               </TableBodyRow>
             {/each}
@@ -187,7 +186,7 @@
             {#each filteredRequests as profile}
               <TableBodyRow>
                 <TableBodyCell><div on:click={goto(`/profile/${profile.userId}`)}><Avatar src={profile.profilePicture} /></div></TableBodyCell>
-                <TableBodyCell>{`${profile.firstName} ${profile.lastName}`}</TableBodyCell>
+                <TableBodyCell><div on:click={goto(`/timeline/${profile.userId}`)}>{profile.fullName}</div></TableBodyCell>
                 <TableBodyCell>
                   <div class="inline-flex">
                     <div on:click={acceptRequest(profile.userId)}><CheckCircle color="#10ff00"/></div>
@@ -213,7 +212,7 @@
             {#each filteredPublic as profile}
               <TableBodyRow>
                 <TableBodyCell><div on:click={goto(`/profile/${profile.userId}`)}><Avatar src={profile.profilePicture} /></div></TableBodyCell>
-                <TableBodyCell>{`${profile.firstName} ${profile.lastName}`}</TableBodyCell>
+                <TableBodyCell><div on:click={goto(`/timeline/${profile.userId}`)}>{profile.fullName}</div></TableBodyCell>
                 <TableBodyCell>
                   {#if !profile.isFriend}
                   <div on:click={addFriend(profile.userId)}><UserAdd /></div>

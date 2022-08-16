@@ -211,5 +211,14 @@ export default {
 			await t.rollback()
 			next(error)
 		}
+	},
+	isAFriend: async (req, res, next) => {
+		const isFriend = await sequelize.query(`SELECT * FROM Connections WHERE (fromUserId = :userId AND toUserId = :friendId) OR (fromUserId = :friendId AND toUserId = :userId) AND status = 'FRIENDS'`,
+			{
+				replacements: { userId: req.params.userId, friendId: req.params.friendId },
+				type: QueryTypes.SELECT
+			}
+		)
+		return (isFriend.length > 0)
 	}
 }

@@ -52,5 +52,8 @@ router
 .post('/comment', async (req, res, next) => {
   await apiController.addComment(req, res, next)
 })
+.get('/friend/:friendId/user/:userId', async (req, res, next) => {
+  await apiController.isAFriend(req, res, next)
+})
 
 export default router

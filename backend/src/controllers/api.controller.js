@@ -133,5 +133,12 @@ export default {
 		} catch (err) {
 			next(err)
 		}
+	},
+	isAFriend: async (req, res, next) => {
+		try {
+			res.json(await apiService.isAFriend(req, res, next))
+		} catch (err) {
+			next(err)
+		}
 	}
 }

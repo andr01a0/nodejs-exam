@@ -3,14 +3,16 @@
     Activity, ActivityItem, Textarea, Button
   } from "flowbite-svelte"
 	import { showToastAndHideAfter } from "$lib/functions/toast"
-	import { goto } from "$app/navigation"
 	import { userStore } from "$lib/store"
 	import { onMount } from "svelte"
+	import { goto } from "$app/navigation"
 	import backendServer from "$lib/data/backendServer.json"
 	import { howLongAgo } from "$lib/functions/time"
 	import { fetchProfilePicture, fetchFullNameByUserId } from "$lib/functions/profile"
 
 	$: comments = []
+
+	$: timelineOwner = ''
 
 	export let userTimelineId
 
@@ -45,6 +47,22 @@
 	}
 
 	onMount(async () => {
+		if($userStore.userId === parseInt(userTimelineId)) {
+			timelineOwner = 'Your'
+		} else {
+			const isAFriendResponse = await fetch(`${backendServer}/api/friend/${userTimelineId}/user/${$userStore.userId}`, {
+				method: "GET",
+				credentials: "include"
+			})
+			if(isAFriendResponse.ok) {
+				const isAFriend = await isAFriendResponse.json()
+				if(!isAFriend) {
+					showToastAndHideAfter("Error", "You are not friends with this user")
+					goto('/feed')
+				}
+			}
+			timelineOwner = `${await fetchFullNameByUserId(userTimelineId)}'s`
+		}
 		await fetchUserComments()
 		await buildActivities()
 	})
@@ -96,6 +114,7 @@
 </script>
 
 <div class="flex-row w-2/4">
+	<p class="font-bold text-xl mb-10">{`${timelineOwner} Timeline`}</p>
 	<form class="flex flex-col space-y-6" on:submit={handleOnSubmit}>
 		<Textarea {...textareaprops} />
 		<Button type="submit" class="w-full1">Comment</Button>
