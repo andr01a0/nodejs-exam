@@ -151,7 +151,7 @@
 	)
 </script>
 
-<diV class="flex-wrap w-3/4">
+<diV class="flex-wrap w-2/4">
   <InteractiveTabHead tabs={tabhead}>
     <TabContent tab={tab1}>
       <div class="text-center">

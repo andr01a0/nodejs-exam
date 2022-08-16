@@ -40,7 +40,8 @@
 			}
 			activitiesList.push(activity)
 		}
-		activities = activitiesList.reverse()
+		if(activitiesList.length > 0)
+			activities = activitiesList.reverse()
 	}
 
 	onMount(async () => {

@@ -195,12 +195,15 @@ export default {
 				message: req.body.comment
 			}, { transaction: t })
 			// create notification if not the same user
-			if (req.body.userFrom !== req.body.userTo) {
+			console.log(req.body)
+			if (req.body.userFrom !== parseInt(req.body.userTo)) {
 				await models.Notification.create({
 					fromUserId: req.body.userFrom,
 					userId: req.body.userTo,
 					message: `${req.body.userFromName} commented on ${req.body.userToName} profile`
 				}, { transaction: t })
+				// update hasNotification to true
+				await models.User.update({ hasNotification: true }, { where: { userId: req.body.userTo } }, { transaction: t })
 			}
 			await t.commit()
 			return comment
