@@ -14,7 +14,6 @@
 	const socket = io("http://localhost:3000")
 
 	socket.on("timelineUpdated", async () => {
-		console.log('client socket')
 		await fetchUserComments()
 		await buildActivities()
 	})
