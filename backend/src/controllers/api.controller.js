@@ -91,5 +91,33 @@ export default {
 		} catch (err) {
 			next(err)
 		}
+	},
+	isFriendById: async (req, res, next) => {
+		try {
+			res.json(await apiService.isFriendById(req, res, next))
+		} catch (err) {
+			next(err)
+		}
+	},
+	addFriend: async (req, res, next) => {
+		try {
+			res.json(await apiService.addFriend(req, res, next))
+		} catch (err) {
+			next(err)
+		}
+	},
+	removeFriend: async (req, res, next) => {
+		try {
+			res.json(await apiService.removeFriend(req, res, next))
+		} catch (err) {
+			next(err)
+		}
+	},
+	acceptFriendRequest: async (req, res, next) => {
+		try {
+			res.json(await apiService.acceptFriendRequest(req, res, next))
+		} catch (err) {
+			next(err)
+		}
 	}
 }

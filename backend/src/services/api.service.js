@@ -116,6 +116,65 @@ export default {
 	},
 	getAllUsersExceptById: async (req, res, next) => {
 		return await models.User.findAll({ attributes: {exclude: ['password', 'createdAt', 'updatedAt']}, where: { userId: { [Op.ne]: req.params.id } } })
+	},
+	isFriendById: async (req, res, next) => {
+		const isFriend = await sequelize.query(`SELECT * FROM Connections WHERE (fromUserId = :userId AND toUserId = :friendId) OR (fromUserId = :friendId AND toUserId = :userId) AND (status = 'FRIENDS' OR status = 'PENDING')`,
+			{
+				replacements: { userId: req.params.userId, friendId: req.params.friendId },
+				type: QueryTypes.SELECT
+			}
+		)
+		return (isFriend.length > 0)
+	},
+	addFriend: async (req, res, next) => {
+		const t = await sequelize.transaction()
+		try {
+			const connection = await models.Connection.create({
+				fromUserId: req.body.userId,
+				toUserId: req.body.friendId,
+				status: 'PENDING'
+			}, { transaction: t })
+			await t.commit()
+			return connection
+		} catch (error) {
+			await t.rollback()
+			next(error)
+		}
+	},
+	removeFriend: async (req, res, next) => {
+		// get the possible connections then delete it
+		const connections = await sequelize.query(`SELECT * FROM Connections WHERE (fromUserId = :userId AND toUserId = :friendId) OR (fromUserId = :friendId AND toUserId = :userId)`,
+		{
+			replacements: { userId: req.params.userId, friendId: req.params.friendId },
+			type: QueryTypes.SELECT
+		})
+		const t = await sequelize.transaction()
+		try {
+			await models.Connection.destroy({ where: { connectionId: connections[0].connectionId } }, { transaction: t })
+			await t.commit()
+			return true
+		} catch (error) {
+			await t.rollback()
+			next(error)
+		}
+	},
+	acceptFriendRequest: async (req, res, next) => {
+		// get the possible pending connections then update it
+		const connections = await sequelize.query(`SELECT * FROM Connections WHERE (fromUserId = :friendId AND toUserId = :userId) AND status = 'PENDING'`,
+		{
+			replacements: { userId: req.body.userId, friendId: req.body.friendId },
+			type: QueryTypes.SELECT
+		})
+		const t = await sequelize.transaction()
+		try {
+			await models.Connection.update({ status: 'FRIENDS' }, { where: { connectionId: connections[0].connectionId } }, { transaction: t })
+			await t.commit()
+			return true
+		}
+		catch (error) {
+			await t.rollback()
+			next(error)
+		}
 	}
 }
 

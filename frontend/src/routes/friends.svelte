@@ -8,7 +8,8 @@
   import { userStore } from "$lib/store"
   import backendServer from "$lib/data/backendServer.json"
   import { fetchProfilePicture, fetchFullNameByUserId } from "$lib/functions/profile"
-  import { goto } from '$app/navigation'
+  import { goto, afterNavigate } from '$app/navigation'
+  import { Trash, CheckCircle, MinusCircle, UserAdd } from 'svelte-heros'
 
 	let tab1 = { name: 'My Friends', id: 1 }
 	let tab2 = { name: 'Requests', id: 2 }
@@ -66,16 +67,78 @@
       for(let publicProfile of publicProfilesData) {
         publicProfile.profilePicture = await fetchProfilePicture(publicProfile.userId)
         publicProfile.fullName = await fetchFullNameByUserId(publicProfile.userId)
+        const isFriend = await fetch(`${backendServer}/api/friend/user/${$userStore.userId}/${publicProfile.userId}`, {
+          method: 'GET',
+          credentials: 'include'
+        })
+        publicProfile.isFriend = await isFriend.json()
         publicProfiles = [...publicProfiles, publicProfile]
       }
     }
   }
 
-  onMount(() => {
-    fetchFriends()
-    fetchRequests()
-    fetchPublicProfile()
-  })
+  const addFriend = async (friendId) => {
+    const response = await fetch(`${backendServer}/api/friend`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: $userStore.userId,
+        friendId: friendId
+      }),
+      credentials: 'include'
+    })
+    if(response.ok) {
+      goto('/friends')
+    }
+  }
+
+  const removeFriend = async (friendId) => {
+    const response = await fetch(`${backendServer}/api/friend/${friendId}/user/${$userStore.userId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    })
+    if(response.ok) {
+      goto('/friends')
+    }
+  }
+
+  const acceptRequest = async (friendId) => {
+    const response = await fetch(`${backendServer}/api/friend/request/accept`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userId: $userStore.userId,
+        friendId: friendId
+      }),
+      credentials: 'include'
+    })
+    if(response.ok) {
+      goto('/friends')
+    }
+  }
+
+  const rejectRequest = async (friendId) => {
+    const response = await fetch(`${backendServer}/api/friend/${friendId}/user/${$userStore.userId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    })
+    if(response.ok) {
+      goto('/friends')
+    }
+  }
+
+	afterNavigate(async ({ from, to }) => {
+    friends = []
+		await fetchFriends()
+    requests = []
+    await fetchRequests()
+    publicProfiles = []
+    await fetchPublicProfile()
+	})
 
 	$: filteredFriends = friends.filter(
 		(profile) => `${profile.firstName} ${profile.lastName}`.toLocaleLowerCase().includes(friendsSearchTerm.toLowerCase())
@@ -104,7 +167,7 @@
               <TableBodyRow>
                 <TableBodyCell><div on:click={goto(`/profile/${profile.userId}`)}><Avatar src={profile.profilePicture} /></div></TableBodyCell>
                 <TableBodyCell>{profile.fullName}</TableBodyCell>
-                <TableBodyCell></TableBodyCell>
+                <TableBodyCell><div on:click={removeFriend(profile.userId)}><Trash color="#ff0000"/></div></TableBodyCell>
               </TableBodyRow>
             {/each}
           </TableBody>
@@ -125,7 +188,12 @@
               <TableBodyRow>
                 <TableBodyCell><div on:click={goto(`/profile/${profile.userId}`)}><Avatar src={profile.profilePicture} /></div></TableBodyCell>
                 <TableBodyCell>{`${profile.firstName} ${profile.lastName}`}</TableBodyCell>
-                <TableBodyCell></TableBodyCell>
+                <TableBodyCell>
+                  <div class="inline-flex">
+                    <div on:click={acceptRequest(profile.userId)}><CheckCircle color="#10ff00"/></div>
+                    <div on:click={rejectRequest(profile.userId)}><MinusCircle color="#ff0000"/></div>
+                  </div>
+              </TableBodyCell>
               </TableBodyRow>
             {/each}
           </TableBody>
@@ -146,7 +214,11 @@
               <TableBodyRow>
                 <TableBodyCell><div on:click={goto(`/profile/${profile.userId}`)}><Avatar src={profile.profilePicture} /></div></TableBodyCell>
                 <TableBodyCell>{`${profile.firstName} ${profile.lastName}`}</TableBodyCell>
-                <TableBodyCell></TableBodyCell>
+                <TableBodyCell>
+                  {#if !profile.isFriend}
+                  <div on:click={addFriend(profile.userId)}><UserAdd /></div>
+                  {/if}
+                </TableBodyCell>
               </TableBodyRow>
             {/each}
           </TableBody>

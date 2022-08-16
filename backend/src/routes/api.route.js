@@ -34,5 +34,17 @@ router
 .get('/user/except/:id', async (req, res, next) => {
   await apiController.getAllUsersExceptById(req, res, next)
 })
+.get('/friend/user/:userId/:friendId', async (req, res, next) => {
+  await apiController.isFriendById(req, res, next)
+})
+.post('/friend', async (req, res, next) => {
+  await apiController.addFriend(req, res, next)
+})
+.delete('/friend/:friendId/user/:userId', async (req, res, next) => {
+  await apiController.removeFriend(req, res, next)
+})
+.post('/friend/request/accept', async (req, res, next) => {
+  await apiController.acceptFriendRequest(req, res, next)
+})
 
 export default router
