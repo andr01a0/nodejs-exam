@@ -2,7 +2,6 @@ import { models } from '../configs/db.models.config.js'
 import { sequelize } from '../configs/db.config.js'
 import fs from 'fs'
 import { QueryTypes, Op } from 'sequelize'
-import { userDTO } from '../dto/user.js'
 
 const defaultProfilePicture = fs.readFileSync('./public/images/friendster.png')
 
@@ -201,8 +200,8 @@ export default {
 					userId: req.body.userTo,
 					message: `${req.body.userFromName} commented on ${req.body.userToName} profile`
 				}, { transaction: t })
-				// update hasNotification to true
-				await models.User.update({ hasNotification: true }, { where: { userId: req.body.userTo } }, { transaction: t })
+				// update HasNotification model status to true
+				//await models.HasNotification.update({ status: 1 }, { where: { userId: req.body.userTo } }, { transaction: t })
 			}
 			await t.commit()
 			return comment
